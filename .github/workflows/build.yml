@@ -1,4 +1,4 @@
-﻿name: Build OpenWrt 25.12 firmware
+name: Build OpenWrt 25.12 firmware
 
 on:
   workflow_dispatch:

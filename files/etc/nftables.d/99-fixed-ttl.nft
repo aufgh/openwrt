@@ -1,4 +1,4 @@
-﻿chain codex_fixed_ttl {
+chain codex_fixed_ttl {
 	type filter hook postrouting priority mangle; policy accept;
 
 	meta oifname != "lo" ip ttl set @TTL_VALUE@

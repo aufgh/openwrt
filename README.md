@@ -1,4 +1,4 @@
-﻿# Netcore N30 Pro OpenWrt 25.12 build
+# Netcore N30 Pro OpenWrt 25.12 build
 
 This repository builds official OpenWrt `openwrt-25.12` firmware for Netcore N30 Pro through GitHub Actions.
 
