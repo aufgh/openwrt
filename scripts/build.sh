@@ -26,16 +26,6 @@ cp "${ROOT_DIR}/patches/mt7981b-netis-nx30v2.dts" target/linux/mediatek/dts/mt79
 git clone --depth 1 https://github.com/Zesuy/luci-app-multi-login.git package/custom/luci-app-multilogin
 git clone --depth 1 https://github.com/Zesuy/UA-Mask.git package/custom/UAmask
 
-git clone --depth 1 --filter=blob:none --sparse https://github.com/linkease/istore.git /tmp/linkease-istore
-git -C /tmp/linkease-istore sparse-checkout set luci/luci-app-store luci/luci-lib-taskd luci/luci-lib-xterm luci/taskd
-cp -a /tmp/linkease-istore/luci/luci-app-store package/custom/luci-app-store
-cp -a /tmp/linkease-istore/luci/luci-lib-taskd package/custom/luci-lib-taskd
-cp -a /tmp/linkease-istore/luci/luci-lib-xterm package/custom/luci-lib-xterm
-cp -a /tmp/linkease-istore/luci/taskd package/custom/taskd
-sed -i 's/ +script-utils//g; s/$(if $(CONFIG_USE_APK),+apk +luci-compat,+opkg)/+apk-mbedtls +luci-compat/g' package/custom/luci-app-store/Makefile
-sed -i 's/ +apk / +apk-mbedtls /g' package/custom/luci-app-store/Makefile
-sed -i 's/ +script-utils//g' package/custom/taskd/Makefile
-
 git clone --depth 1 https://github.com/jerrykuku/luci-theme-argon.git package/custom/luci-theme-argon
 
 git clone --depth 1 --filter=blob:none --sparse https://github.com/immortalwrt/luci.git /tmp/immortalwrt-luci
@@ -72,18 +62,6 @@ CONFIG_PACKAGE_luci-i18n-mwan3-zh-cn=y
 
 CONFIG_PACKAGE_luci-app-multilogin=y
 CONFIG_PACKAGE_UAmask=y
-CONFIG_PACKAGE_apk-mbedtls=y
-CONFIG_PACKAGE_curl=y
-CONFIG_PACKAGE_tar=y
-CONFIG_PACKAGE_libuci-lua=y
-CONFIG_PACKAGE_mount-utils=y
-CONFIG_PACKAGE_luci-lib-xterm=y
-CONFIG_PACKAGE_taskd=y
-CONFIG_PACKAGE_luci-lib-taskd=y
-CONFIG_PACKAGE_luci-lua-runtime=y
-CONFIG_PACKAGE_coreutils=y
-CONFIG_PACKAGE_coreutils-stty=y
-CONFIG_PACKAGE_luci-app-store=y
 CONFIG_PACKAGE_luci-app-syncdial=y
 CONFIG_PACKAGE_luci-app-zerotier=y
 CONFIG_PACKAGE_luci-i18n-zerotier-zh-cn=y
@@ -116,9 +94,6 @@ EOF
 
 make defconfig
 
-echo 'Selected iStore dependency symbols after defconfig:'
-grep -E '^(CONFIG_PACKAGE_|# CONFIG_PACKAGE_)(luci-app-store|luci-lib-taskd|luci-lib-xterm|taskd|apk|apk-mbedtls|apk-openssl|opkg|curl|tar|libuci-lua|mount-utils|luci-lua-runtime|coreutils|coreutils-stty|script-utils)' .config || true
-
 required_packages=(
   luci
   luci-i18n-base-zh-cn
@@ -128,7 +103,6 @@ required_packages=(
   luci-app-mwan3
   luci-app-multilogin
   UAmask
-  luci-app-store
   luci-app-syncdial
   luci-app-zerotier
   zerotier
@@ -148,8 +122,6 @@ for package_name in "${required_packages[@]}"; do
   if ! grep -q "^CONFIG_PACKAGE_${package_name}=y$" .config; then
     echo "::error::Package was not selected after defconfig: ${package_name}" >&2
     grep -A8 -B4 "Package: ${package_name}" tmp/.packageinfo 2>/dev/null || true
-    echo "Related iStore dependency state:" >&2
-    grep -E '^(CONFIG_PACKAGE_|# CONFIG_PACKAGE_)(luci-app-store|luci-lib-taskd|luci-lib-xterm|taskd|apk|apk-mbedtls|apk-openssl|opkg|curl|tar|libuci-lua|mount-utils|luci-lua-runtime|coreutils|coreutils-stty|script-utils)' .config >&2 || true
     missing=1
   fi
 done

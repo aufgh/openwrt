@@ -36,7 +36,6 @@ Custom source packages:
 
 - `Zesuy/luci-app-multi-login` -> `luci-app-multilogin`
 - `Zesuy/UA-Mask` -> `UAmask`, firewall4/nftables version
-- `linkease/istore` -> `luci-app-store`, plus `luci-lib-taskd`, `luci-lib-xterm`, and `taskd` dependencies
 - `jerrykuku/luci-theme-argon` -> `luci-theme-argon`
 - `pppoex/openwrt-packages/luci-app-syncdial` -> newer syncdial package without the old `shellsync` dependency
 - `immortalwrt/luci/applications/luci-app-zerotier` -> LuCI page for ZeroTier, because it is not present in official LuCI 25.12
@@ -50,6 +49,8 @@ OpenWrt feed packages:
 - USB storage and USB network sharing modules including RNDIS, CDC Ethernet, NCM, MBIM, and QMI WWAN
 
 `ipv6helper` is not added as a hard package name because I could not confirm it exists in OpenWrt 25.12. The included IPv6 packages are the practical equivalent for current OpenWrt.
+
+`luci-app-store`/iStore is also not included. Its current package metadata is visible to OpenWrt 25.12, but `defconfig` still drops the package because its legacy dependency declarations do not resolve cleanly in the apk-based package set.
 
 ## Build
 
