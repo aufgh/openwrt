@@ -32,6 +32,8 @@ cp -a /tmp/linkease-istore/luci/luci-app-store package/custom/luci-app-store
 cp -a /tmp/linkease-istore/luci/luci-lib-taskd package/custom/luci-lib-taskd
 cp -a /tmp/linkease-istore/luci/luci-lib-xterm package/custom/luci-lib-xterm
 cp -a /tmp/linkease-istore/luci/taskd package/custom/taskd
+sed -i 's/ +script-utils//g; s/$(if $(CONFIG_USE_APK),+apk +luci-compat,+opkg)/+apk +luci-compat/g' package/custom/luci-app-store/Makefile
+sed -i 's/ +script-utils//g' package/custom/taskd/Makefile
 
 git clone --depth 1 https://github.com/jerrykuku/luci-theme-argon.git package/custom/luci-theme-argon
 
@@ -102,6 +104,9 @@ EOF
 
 make defconfig
 
+echo 'Selected iStore dependency symbols after defconfig:'
+grep -E 'CONFIG_PACKAGE_(luci-app-store|luci-lib-taskd|luci-lib-xterm|taskd|apk|opkg|coreutils|coreutils-stty|script-utils)=' .config || true
+
 required_packages=(
   luci
   luci-i18n-base-zh-cn
@@ -130,6 +135,7 @@ missing=0
 for package_name in "${required_packages[@]}"; do
   if ! grep -q "^CONFIG_PACKAGE_${package_name}=y$" .config; then
     echo "::error::Package was not selected after defconfig: ${package_name}" >&2
+    grep -A8 -B4 "Package: ${package_name}" tmp/.packageinfo 2>/dev/null || true
     missing=1
   fi
 done
