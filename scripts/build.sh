@@ -25,8 +25,21 @@ cp "${ROOT_DIR}/patches/mt7981b-netis-nx30v2.dts" target/linux/mediatek/dts/mt79
 
 git clone --depth 1 https://github.com/Zesuy/luci-app-multi-login.git package/custom/luci-app-multilogin
 git clone --depth 1 https://github.com/Zesuy/UA-Mask.git package/custom/UAmask
-git clone --depth 1 https://github.com/linkease/istore.git package/custom/istore
+
+git clone --depth 1 --filter=blob:none --sparse https://github.com/linkease/istore.git /tmp/linkease-istore
+git -C /tmp/linkease-istore sparse-checkout set luci/luci-app-store luci/luci-lib-taskd luci/luci-lib-xterm luci/taskd
+cp -a /tmp/linkease-istore/luci/luci-app-store package/custom/luci-app-store
+cp -a /tmp/linkease-istore/luci/luci-lib-taskd package/custom/luci-lib-taskd
+cp -a /tmp/linkease-istore/luci/luci-lib-xterm package/custom/luci-lib-xterm
+cp -a /tmp/linkease-istore/luci/taskd package/custom/taskd
+
 git clone --depth 1 https://github.com/jerrykuku/luci-theme-argon.git package/custom/luci-theme-argon
+
+git clone --depth 1 --filter=blob:none --sparse https://github.com/immortalwrt/luci.git /tmp/immortalwrt-luci
+git -C /tmp/immortalwrt-luci sparse-checkout set applications/luci-app-zerotier
+cp -a /tmp/immortalwrt-luci/applications/luci-app-zerotier package/custom/luci-app-zerotier
+sed -i 's#include ../../luci.mk#include $(TOPDIR)/feeds/luci/luci.mk#' package/custom/luci-app-zerotier/Makefile
+
 git clone --depth 1 https://github.com/pppoex/openwrt-packages.git /tmp/pppoex-openwrt-packages
 cp -a /tmp/pppoex-openwrt-packages/luci-app-syncdial package/custom/luci-app-syncdial
 
@@ -45,6 +58,7 @@ CONFIG_PACKAGE_luci=y
 CONFIG_PACKAGE_luci-base=y
 CONFIG_PACKAGE_luci-ssl=y
 CONFIG_PACKAGE_luci-compat=y
+CONFIG_LUCI_LANG_zh_Hans=y
 CONFIG_PACKAGE_luci-i18n-base-zh-cn=y
 CONFIG_PACKAGE_luci-proto-ipv6=y
 CONFIG_PACKAGE_luci-theme-argon=y

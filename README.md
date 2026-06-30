@@ -36,9 +36,10 @@ Custom source packages:
 
 - `Zesuy/luci-app-multi-login` -> `luci-app-multilogin`
 - `Zesuy/UA-Mask` -> `UAmask`, firewall4/nftables version
-- `linkease/istore` -> `luci-app-store`
+- `linkease/istore` -> `luci-app-store`, plus `luci-lib-taskd`, `luci-lib-xterm`, and `taskd` dependencies
 - `jerrykuku/luci-theme-argon` -> `luci-theme-argon`
 - `pppoex/openwrt-packages/luci-app-syncdial` -> newer syncdial package without the old `shellsync` dependency
+- `immortalwrt/luci/applications/luci-app-zerotier` -> LuCI page for ZeroTier, because it is not present in official LuCI 25.12
 
 OpenWrt feed packages:
 
